@@ -35,13 +35,20 @@ def longitude_to_ddm(dd):
 con = pymysql.connect(host = 'localhost',user = dbuser,passwd = dbpass,db = dbname)
 cursor = con.cursor()
 
-
-cursor.execute("SELECT * FROM abfire")
-result = cursor.fetchall()
-
 # a valid passcode for the callsign is required in order to send
 AIS = aprslib.IS("VA6AEA", passwd="22179", port=14580, host="alberta.aprs2.net")
 AIS.connect()
+
+# get the current time in UTC and format for APRS
+ztime = datetime.datetime.utcnow()
+ztime = (ztime.strftime("%d%H%M"))
+
+
+
+
+# qeury, construct and send af fire data to aprs.is
+cursor.execute("SELECT * FROM abfire")
+result = cursor.fetchall()
 
 for row in result:
   name = (row[1])
@@ -60,12 +67,29 @@ for row in result:
   # sleep 5 seconds so as to not slam APRS
   time.sleep(5)
 
-  # get the current time in UTC and format for APRS
-  ztime = datetime.datetime.utcnow()
-  ztime = (ztime.strftime("%d%H%M"))
 
   # send a single status message
   AIS.sendall("VA6AEA>ABFIRE,TCPIP*:;FR-"+fire_number+"*"+ztime+"z"+fire_location_latitude+"/"+fire_location_longitude+":"+name+", Status: ["+fire_status+"] Cause: ["+general_cause+"] Size: ["+area_burned+"ha]")
+
+
+# qeury, construct and send af road data to aprs.is, only accidents for now
+cursor.execute("SELECT * FROM `abroads` WHERE `eventtype` = 'accidentsAndIncidents'")
+result = cursor.fetchall()
+
+for row in result:
+  abid = (row[1])
+  roadwayname = (row[3])
+  description = (row[5])
+  latitude = latitude_to_ddm(row[11])
+  longitude = longitude_to_ddm(row[12])
+
+  # sleep 5 seconds so as to not slam APRS
+  time.sleep(5)
+
+  print(abid)
+  # send a single status message
+  AIS.sendall("VA6AEA>ABROAD,TCPIP*:;RD-"+roadwayname+"*"+ztime+"z"+latitude+"\\"+longitude+"'"+roadwayname+", Desc: ["+description+"]")
+
 
 
 con.commit()
