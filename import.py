@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 # MySQL:
 # create database aprs;
 # CREATE USER 'aprs'@'localhost' IDENTIFIED BY 'mypass';
@@ -8,11 +7,36 @@
 # GRANT ALL ON *.* TO 'myuser'@'%';
 # flush privileges;
 
+# CREATE TABLE `abroads` (
+#   `id` int NOT NULL,
+#   `abid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+#   `organization` varchar(255) NOT NULL,
+#   `roadwayname` varchar(255) NOT NULL,
+#   `directionoftravel` varchar(255) NOT NULL,
+#   `description` text NOT NULL,
+#   `reported` varchar(255) NOT NULL,
+#   `lastupdated` varchar(255) NOT NULL,
+#   `startdate` varchar(255) NOT NULL,
+#   `plannedenddate` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+#   `lanesaffected` varchar(255) NOT NULL,
+#   `latitude` varchar(255) NOT NULL,
+#   `longitude` varchar(255) NOT NULL,
+#   `latitudesecondary` varchar(255) NOT NULL,
+#   `longitudesecondary` varchar(255) NOT NULL,
+#   `eventtype` varchar(255) NOT NULL
+# ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+# CREATE TABLE `log` (
+#   `id` int NOT NULL,
+#   `process` varchar(255) NOT NULL,
+#   `events` int NOT NULL,
+#   `rundate` datetime NOT NULL
+# ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
 import pymysql, os, json, urllib.request, csv, io
 from datetime import datetime
-
-from config import *
-
 
 with urllib.request.urlopen("https://511.alberta.ca/api/v2/get/event") as abroad_url:
   abroad_data = json.loads(abroad_url.read().decode())
@@ -20,6 +44,12 @@ with urllib.request.urlopen("https://511.alberta.ca/api/v2/get/event") as abroad
 url = "https://wildfire.alberta.ca/reports/activedd.csv"
 webpage = urllib.request.urlopen(url)
 abfire_data = csv.reader(webpage.read().decode('utf-8').splitlines())
+
+dbname = "aprs"
+dbuser = "aprs"
+dbpass = "Ax93=D#b"
+
+
 
 # do validation and checks before insert
 def validate_string(val):
