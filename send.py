@@ -78,17 +78,20 @@ result = cursor.fetchall()
 
 for row in result:
   abid = (row[1])
+  # padd the object name to make it 9 characters, APRS expects object names to be 9 characters only, do some other formatting
+  abid = abid.strip()
+  abid = abid.replace("-", "")
+  abid = abid.ljust(9, ' ')
   roadwayname = (row[3])
   description = (row[5])
   latitude = latitude_to_ddm(row[11])
   longitude = longitude_to_ddm(row[12])
 
-  # sleep 5 seconds so as to not slam APRS
-  time.sleep(5)
+  # sleep 60 seconds so as to not slam APRS, or trigger "location changes too fast"
+  time.sleep(10)
 
-  print(abid)
   # send a single status message
-  AIS.sendall("VA6AEA>ABROAD,TCPIP*:;RD-"+roadwayname+"*"+ztime+"z"+latitude+"\\"+longitude+"'"+roadwayname+", Desc: ["+description+"]")
+  AIS.sendall("VA6AEA>ABROAD,TCPIP*:;"+abid+"*"+ztime+"z"+latitude+"A"+longitude+"'"+roadwayname+", Desc: ["+description+"]")
 
 
 

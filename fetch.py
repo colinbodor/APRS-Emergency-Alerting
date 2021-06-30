@@ -43,6 +43,7 @@ formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
 # parse the AB road json data and insert
 count=0
 cursor.execute("TRUNCATE abroads")
+
 for i, item in enumerate(abroad_data):
     abid = validate_string(item.get("ID", None))
     organization = validate_string(item.get("Organization", None))

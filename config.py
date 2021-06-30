@@ -9,6 +9,6 @@ aprs_port = "14580"
 
 dbname = "aprs"
 dbuser = "aprs"
-dbpass = "*******"
+dbpass = "*****"
 
 
