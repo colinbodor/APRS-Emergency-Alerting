@@ -36,7 +36,8 @@ con = pymysql.connect(host = 'localhost',user = dbuser,passwd = dbpass,db = dbna
 cursor = con.cursor()
 
 # a valid passcode for the callsign is required in order to send
-AIS = aprslib.IS("VA6AEA", passwd="22179", port=14580, host="alberta.aprs2.net")
+#AIS = aprslib.IS("VA6AEA", passwd="22179", port=14580, host="alberta.aprs2.net")
+AIS = aprslib.IS(aprs_call, passwd=aprs_pass, port=aprs_port, host=aprs_server)
 AIS.connect()
 
 # get the current time in UTC and format for APRS

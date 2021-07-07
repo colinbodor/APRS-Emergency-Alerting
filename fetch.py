@@ -64,7 +64,7 @@ for i, item in enumerate(abroad_data):
     count +=1
 
 # write out the log so we know what happened
-cursor.execute("INSERT INTO log (process, events, rundate) VALUES ('abroads', %s, %s)", (count, formatted_date))
+cursor.execute("INSERT INTO log_fetch (process, events, rundate) VALUES ('abroads', %s, %s)", (count, formatted_date))
 
 
 # parse the AB wildfire CSV data and insert
@@ -119,7 +119,7 @@ for row in abfire_data:
     count +=1
 
 # write out the log so we know what happened
-cursor.execute("INSERT INTO log (process, events, rundate) VALUES ('abfire', %s, %s)", (count, formatted_date))
+cursor.execute("INSERT INTO log_fetch (process, events, rundate) VALUES ('abfire', %s, %s)", (count, formatted_date))
 
 
 con.commit()
