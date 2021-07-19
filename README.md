@@ -1,2 +1,2 @@
 # APRS-Emergency-Alerting
-www.hazardscapre.ca
+www.hazardscape.ca
