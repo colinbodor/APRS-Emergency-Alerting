@@ -205,7 +205,7 @@ Currently seeking contributors who would want to help with the code as well as t
 
 <h3>Current Weather</h3>
 <?php
-$url = "https://api.openweathermap.org/data/2.5/forecast?q=Edmonton&APPID=0dfddd0c3196246da61a909e1beb82d6&units=metric";
+$url = "https://api.openweathermap.org/data/2.5/forecast?q=Edmonton&APPID=********&units=metric";
 $json=file_get_contents($url);
 $data=json_decode($json);
 
@@ -286,7 +286,7 @@ if ($result->num_rows > 0) {
 
 </div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZiG2K0Jy2jEYUA2Y3l18nAyl_CLlITSM&callback=initMap&libraries=&v=weekly" async></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=********&callback=initMap&libraries=&v=weekly" async></script>
 
 </body>
 
