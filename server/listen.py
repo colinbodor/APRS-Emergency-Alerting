@@ -1,12 +1,26 @@
 #!/usr/bin/python3
 # APRS location data from aprs.fi
-import aprslib, logging, json, requests, urllib.request, time, pymysql, time, os, psutil
+import aprslib, logging, json, requests, urllib.request, time, pymysql, time, os, psutil, threading
 from datetime import datetime
 from time import gmtime, strftime
 from config import *
 
 if debug == "yes":
   logging.basicConfig(level=logging.INFO)
+
+
+def heartbeat():
+  threading.Timer(60.0, heartbeat).start()
+  now = datetime.utcnow()
+  formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+  con = pymysql.connect(host = 'localhost',user = dbuser,passwd = dbpass,db = dbname)
+  cursor = con.cursor()
+  cursor.execute("""UPDATE heartbeat set datetime = %s WHERE task = %s""", (now, "listen.py"))
+  con.commit()
+  con.close()
+
+heartbeat()
+
 
 
 def callback(packet):
@@ -28,8 +42,7 @@ def callback(packet):
           # connect to MySQL
           con = pymysql.connect(host = 'localhost',user = dbuser,passwd = dbpass,db = dbname)
           cursor = con.cursor()
-          cursor.execute("INSERT INTO log_aprs (timestamp, direction, callsign, message) VALUES (%s, 'inbound', %s, %s)", (formatted_date, replyto, message))
-
+          cursor.execute("INSERT INTO aprs_log (timestamp, direction, callsign, message) VALUES (%s, 'inbound', %s, %s)", (formatted_date, replyto, message))
           con.commit()
           con.close()
 

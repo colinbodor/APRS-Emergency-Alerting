@@ -9,6 +9,9 @@ aprs_port = "14580"
 
 dbname = "aprs"
 dbuser = "aprs"
-dbpass = "*****"
+dbpass = "******"
 
+wx_api_key = "**********"
+aprs_api_key = "*************"
 
+debug = "yes"
