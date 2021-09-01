@@ -141,9 +141,10 @@ for row in fedfire_data:
     startdate = (row[4])
     hectares = (row[5])
     try:
-      stage_of_control = (row[6])
+      stage_of_control_raw = (row[6])
+      stage_of_control = stage_of_control_raw.lstrip()
     except:
-      stage_of_control = "Unknown"
+      stage_of_control_strip = "Unknown"
     cursor.execute("INSERT INTO fedfire (agency, firename, lat, lon, startdate, hectares, stage_of_control) VALUES (%s, %s, %s, %s, %s, %s, %s)", (agency, firename, lat, lon, startdate, hectares, stage_of_control))
     count +=1
 

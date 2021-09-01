@@ -4,9 +4,13 @@ import aprslib, logging, json, requests, urllib.request, time, pymysql, time, os
 from datetime import datetime
 from time import gmtime, strftime
 from config import *
+import colorama
+from colorama import Fore, Style, init
 
 if debug == "yes":
   logging.basicConfig(level=logging.INFO)
+
+init(autoreset=True)
 
 
 def heartbeat():
@@ -36,9 +40,11 @@ def callback(packet):
         response = 0
         # send an ack so they know we got the packet
         AIS.sendall("VA6AEA>APRS,TCPIP*,qAC,::"+replyto+" :ack"+msgnum+"")
-
         if "message_text" in packet:
           message = (packet['message_text'])
+
+          print(Fore.YELLOW + "Messaged received from: "+replyto+" Content: "+message+" Time: "+formatted_date+" -- mark -- ")
+
           # connect to MySQL
           con = pymysql.connect(host = 'localhost',user = dbuser,passwd = dbpass,db = dbname)
           cursor = con.cursor()

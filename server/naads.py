@@ -161,7 +161,10 @@ while True:
                 except:
                   description = "no description"
 
-                instruction = row.find('instruction').get_text()
+                try:
+                  instruction = row.find('instruction').get_text()
+                except:
+                  instruction = "no instruction"
 
                 #this loops through all the <area> sections, sometimes many and puts them in separate table linked with the identifier
                 result = row.find_all('area')

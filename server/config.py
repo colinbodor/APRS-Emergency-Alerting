@@ -8,10 +8,10 @@ aprs_server = "alberta.aprs2.net"
 aprs_port = "14580"
 
 dbname = "aprs"
-dbuser = "aprs"
-dbpass = "******"
+dbuser = "*******"
+dbpass = "*******"
 
-wx_api_key = "**********"
-aprs_api_key = "*************"
+wx_api_key = "*************************"
+aprs_api_key = "**************************"
 
 debug = "yes"

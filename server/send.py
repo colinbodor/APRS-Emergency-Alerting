@@ -135,3 +135,64 @@ for row in result:
   # send a single status message
   AIS.sendall("VA6AEA>SKFIRE,TCPIP*:;FR-"+aprs_firename+"*"+ztime+"z"+lat+"/"+lon+":"+firename+", Status: ["+stage_of_control+"] Size: ["+hectares+"ha] hazardscape.ca")
 
+
+
+
+# query, construct and send wildfire data to aprs.is for NWT
+con = pymysql.connect(host = 'localhost',user = dbuser,passwd = dbpass,db = dbname)
+cursor = con.cursor()
+cursor.execute("SELECT * FROM `fedfire` WHERE `agency` = 'nt' ")
+result = cursor.fetchall()
+con.commit()
+con.close()
+
+for row in result:
+  firename = (row[2]).strip()
+  aprs_firename = firename
+  aprs_firename = aprs_firename.replace("-", "")
+  aprs_firename = aprs_firename[0:5]
+  aprs_firename = aprs_firename.ljust(6, ' ')
+
+  lat = latitude_to_ddm(row[3]).strip()
+  lon = longitude_to_ddm(row[4]).strip()
+  stage_of_control = (row[7]).strip()
+  hectares = (row[6]).strip()
+  # replace some codes with human readable phrases
+  stage_of_control = stage_of_control.replace("OC", "Out of Control")
+  stage_of_control = stage_of_control.replace("BH", "Being Held")
+  stage_of_control = stage_of_control.replace("UC", "Under Control")
+  stage_of_control = stage_of_control.replace("TO", "Turned Over")
+
+  # sleep 5 seconds so as to not slam APRS
+  time.sleep(5)
+
+  # send a single status message
+  AIS.sendall("VA6AEA>NTFIRE,TCPIP*:;FR-"+aprs_firename+"*"+ztime+"z"+lat+"/"+lon+":"+firename+", Status: ["+stage_of_control+"] Size: ["+hectares+"ha] hazardscape.ca")
+
+
+
+
+# qeury, construct and send AB hospital data to aprs.is
+con = pymysql.connect(host = 'localhost',user = dbuser,passwd = dbpass,db = dbname)
+cursor = con.cursor()
+cursor.execute("SELECT * FROM `hospital` WHERE `province` = 'AB'")
+result = cursor.fetchall()
+con.commit()
+con.close()
+number = 0
+for row in result:
+  city = (row[2])
+  name = (row[3])
+  address = (row[4])
+  phone = (row[5])
+  latitude = latitude_to_ddm(row[6])
+  longitude = longitude_to_ddm(row[7])
+  number = number + 1
+  emerg_name = "AB-EMERG"+str(number)
+
+  # sleep 10 seconds so as to not slam APRS, or trigger "location changes too fast"
+  time.sleep(10)
+
+  # send a single status message
+  AIS.sendall("VA6AEA>ABEMER,TCPIP*:;"+emerg_name+"*"+ztime+"z"+latitude+"/"+longitude+"h"+name+", Addr: ["+address+"] Phone: ["+phone+"] OR [911] hazardscape.ca")
+
